@@ -18,7 +18,7 @@ export const PokemonListPage = () => {
     <div className={classes.root}>
       <input
         type="text"
-        placeholder="Search Pokémon By Name..."
+        placeholder="&#128269; Search Pokémon By Name..."
         onChange={(e) => setSearch(e.target.value)}
         className={classes.searchBar}
       />
@@ -42,17 +42,23 @@ export const PokemonListPage = () => {
 const useStyles = tss.create(({ theme }: any) => ({
   root: {
     color: theme.color.text.primary,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    ...theme.flex,
+    ...theme.flex.column,
   },
   searchBar: {
-    ...theme.search.bar,
+    ...theme.border.solidWhite,
+    padding: '0.5rem',
+    width: '80%',
+    marginBottom: '2rem',
   },
   searchMessage: {
-    ...theme.search.message,
+    ...theme.flex,
+    ...theme.flex.column,
   },
   container: {
-    ...theme.pokemonGrid,
+    ...theme.flex,
+    ...theme.flex.column,
+    gap: '3rem',
+    width: '100%',
   },
 }));

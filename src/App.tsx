@@ -1,29 +1,32 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
+
 import { PokemonListPage } from './screens/PokemonListPage';
 import { LayoutWrapper } from './LayoutWrapper';
-import { ApolloProvider } from '@apollo/client/react';
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { HomePage } from './screens/HomePage';
+import { DetailsPage } from './screens/DetailsPage';
 
-const client = new ApolloClient({
-  link: new HttpLink({
-    uri: 'https://graphql.pokeapi.co/v1beta2',
-  }),
-  cache: new InMemoryCache(),
-});
+export const App = () => {
+  const location = useLocation();
+  const state = location.state as { background?: Location };
 
-const App = () => (
-  <ApolloProvider client={client}>
-    <BrowserRouter>
-      <Routes>
+  return (
+    <>
+      <Routes location={state?.background || location}>
         <Route path="/" element={<LayoutWrapper />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/list" element={<PokemonListPage />} />
+          <Route index element={<HomePage />} />
+          <Route path="list" element={<PokemonListPage />} />
+          <Route path="list/:id" element={<DetailsPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
-  </ApolloProvider>
-);
+
+      {state?.background && (
+        <Routes>
+          <Route path="list/:id" element={<DetailsPage />} />
+        </Routes>
+      )}
+    </>
+  );
+};
 
 export default App;

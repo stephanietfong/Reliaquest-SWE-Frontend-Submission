@@ -9,7 +9,9 @@ export interface Pokemon {
 }
 
 export interface PokemonDetail extends Pokemon {
-  // Details
+  weight?: number;
+  height?: number;
+  stats?: { name: string; base_stat: number }[];
 }
 
 export const GET_POKEMONS = gql`
@@ -44,7 +46,7 @@ export const GET_POKEMONS = gql`
 `;
 
 export const GET_POKEMON_DETAILS = gql`
-  query GetPokemonDetails($id: String!) {
+  query GetPokemonDetails($id: Int!) {
     pokemon(where: { id: { _eq: $id } }) {
       id
       pokemonspecy {
@@ -99,6 +101,43 @@ export const useGetPokemons = (/* search?: string */): {
           ),
         }),
       ) ?? [],
+    loading,
+    error,
+  };
+};
+
+export const useGetPokemonDetails = (
+  id: number,
+): {
+  data: PokemonDetail;
+  loading: boolean;
+  error: useQuery.Result['error'];
+} => {
+  const { data, loading, error } = useQuery<{ pokemon: any[] }>(GET_POKEMON_DETAILS, {
+    variables: {
+      id,
+    },
+  });
+
+  return {
+    data: data?.pokemon?.[0]
+      ? {
+          id: data.pokemon[0].id,
+          name: data.pokemon[0].pokemonspecy.pokemonspeciesnames?.[0]?.name,
+          sprite: data.pokemon[0].pokemonsprites?.[0]?.sprites,
+          types: data.pokemon[0].pokemontypes?.map(
+            (t: { type: { typenames: { name: string }[] } }) => t.type.typenames?.[0]?.name,
+          ),
+          weight: data.pokemon[0].weight,
+          height: data.pokemon[0].height,
+          stats: data.pokemon[0].pokemonstats?.map(
+            (s: { base_stat: number; stat: { name: string } }) => ({
+              name: s.stat.name,
+              base_stat: s.base_stat,
+            }),
+          ),
+        }
+      : ({} as PokemonDetail),
     loading,
     error,
   };

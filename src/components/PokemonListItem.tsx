@@ -1,5 +1,6 @@
 import React from 'react';
 import { tss } from 'src/tss';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface PokemonListItemProps {
   id: string;
@@ -10,9 +11,15 @@ interface PokemonListItemProps {
 
 const PokemonListItem = ({ id, name, types = [], sprite = '' }: PokemonListItemProps) => {
   const { classes } = useStyles();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  function handleClick() {
+    navigate(`/list/${id}`, { state: { background: location } });
+  }
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} onClick={handleClick} aria-hidden="true">
       <div className={classes.listItem}>
         {sprite && <img src={sprite} alt={name} className={classes.image} />}
         <div className={classes.informationColumn}>
@@ -36,13 +43,25 @@ const useStyles = tss.create(({ theme }: any) => ({
     width: '80%',
   },
   listItem: {
-    ...theme.pokemonItem,
+    ...theme.flex,
+    ...theme.flex.row,
+    ...theme.border.solidWhite,
+    padding: '1rem',
+    gap: '5rem',
+    transition: 'transform 0.3s',
+
+    '&:hover': {
+      transform: 'scale(1.025)',
+      cursor: 'pointer',
+    },
   },
   image: {
-    ...theme.pokemonItem.image,
+    width: '200px',
   },
   informationColumn: {
-    ...theme.pokemonItem.informationColumn,
+    ...theme.flex,
+    ...theme.flex.column,
+    alignItems: 'flex-start',
   },
 }));
 
