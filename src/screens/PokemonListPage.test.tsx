@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, fireEvent, render } from 'src/test-utils';
+import { act, render } from 'src/test-utils';
 import { PokemonListPage } from './PokemonListPage';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,7 +25,12 @@ describe('PokemonListPage', () => {
       await user.click(getByText('Bulbasaur'));
     });
 
-    expect(mockNavigate).toHaveBeenCalledWith(/* The route to Bulbasaur */);
+    expect(mockNavigate).toHaveBeenCalledWith(
+      '/list/1',
+      expect.objectContaining({
+        state: expect.any(Object),
+      }),
+    );
   });
   test.todo('typing in the search bar filters the results');
 });

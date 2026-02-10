@@ -4,11 +4,12 @@
 import React, { FC, ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 
 const AllTheProviders: FC<{ children: React.ReactNode }> = ({ children }) => children;
 
 const customRender = (ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) =>
-  render(ui, { wrapper: AllTheProviders, ...options });
+  render(<MemoryRouter>{ui}</MemoryRouter>, { wrapper: AllTheProviders, ...options });
 const userEventRender = (jsx: any, options?: RenderOptions) => {
   const wrapper = customRender(jsx, options);
   return {

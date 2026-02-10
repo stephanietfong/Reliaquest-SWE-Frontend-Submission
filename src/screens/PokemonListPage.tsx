@@ -1,17 +1,23 @@
-import { React, useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { tss } from '../tss';
 import { useGetPokemons } from 'src/hooks/useGetPokemons';
 import PokemonListItem from 'src/components/PokemonListItem';
 import { Loading } from 'src/components/Loading';
+import { isErrorLike } from '@apollo/client/errors';
 
 export const PokemonListPage = () => {
   const { classes } = useStyles();
-  const { data, loading } = useGetPokemons();
+  const { data, loading, error } = useGetPokemons();
   const [search, setSearch] = useState('');
   const displayData = data.filter((d) => d.name.toLowerCase().includes(search.toLowerCase()));
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (isErrorLike(error)) {
+    return <p>Error fetching data. Please try again.</p>;
   }
 
   return (

@@ -23,7 +23,10 @@ const PokemonListItem = ({ id, name, types = [], sprite = '' }: PokemonListItemP
       <div className={classes.listItem}>
         {sprite && <img src={sprite} alt={name} className={classes.image} />}
         <div className={classes.informationColumn}>
-          <h1>{`${id}: ${name}`}</h1>
+          <h1>
+            {`${id}: `}
+            <span>{name}</span>
+          </h1>
           <h3>{types.length === 1 ? `Type: ${types[0]}` : `Types: ${types.join(', ')}`}</h3>
           <p>Click to Learn More!</p>
         </div>

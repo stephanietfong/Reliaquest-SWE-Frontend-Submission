@@ -1,9 +1,10 @@
-import { React } from 'react';
-import Modal from 'antd/es/modal/Modal';
+import * as React from 'react';
+import { Modal } from 'antd';
 import { useGetPokemonDetails } from 'src/hooks/useGetPokemons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { tss } from 'src/tss';
 import { Loading } from 'src/components/Loading';
+import { isErrorLike } from '@apollo/client/errors';
 
 export const DetailsPage = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ export const DetailsPage = () => {
 
   const handleCancel = () => navigate('/list');
 
-  if (loading || error) {
+  if (loading) {
     return (
       <Modal
         title={`${data.id}: ${data.name}`}
@@ -24,9 +25,13 @@ export const DetailsPage = () => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        {loading ? <Loading /> : <p>Error fetching data. Please try again. &#128533;</p>}
+        <Loading />
       </Modal>
     );
+  }
+
+  if (isErrorLike(error)) {
+    return <p>Error fetching data. Please try again.</p>;
   }
 
   return (
