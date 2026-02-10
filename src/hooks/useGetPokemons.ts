@@ -93,6 +93,10 @@ export const useGetPokemons = (/* search?: string */): {
         (p): Pokemon => ({
           id: p.id,
           name: p.pokemonspecy.pokemonspeciesnames?.[0]?.name,
+          sprite: p.pokemonsprites?.[0]?.sprites,
+          types: p.pokemontypes?.map(
+            (t: { type: { typenames: { name: string }[] } }) => t.type.typenames?.[0]?.name,
+          ),
         }),
       ) ?? [],
     loading,
